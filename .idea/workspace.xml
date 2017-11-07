@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="7af5d0ac-fd17-43e1-a2a9-1ce9441da991" name="默认" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/dialog.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/zujian.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dialog.html" afterPath="$PROJECT_DIR$/dialog.html" />
     </list>
     <ignored path="drag.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -31,8 +28,8 @@
       <file leaf-file-name="dialog.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/dialog.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="302">
-              <caret line="107" column="5" selection-start-line="107" selection-start-column="5" selection-end-line="107" selection-end-column="5" />
+            <state relative-caret-position="238">
+              <caret line="149" column="36" selection-start-line="149" selection-start-column="36" selection-end-line="149" selection-end-column="36" />
               <folding />
             </state>
           </provider>
@@ -138,7 +135,7 @@
     <property name="js-jscs-nodeInterpreter" value="/usr/local/bin/node" />
     <property name="HbShouldOpenHtmlAsHb" value="" />
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
-    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.JavaScript" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/.." />
     <property name="javascript.nodejs.core.library.configured.version" value="6.11.1" />
@@ -237,12 +234,12 @@
       <workItem from="1508999970570" duration="1082000" />
       <workItem from="1509001075280" duration="6757000" />
       <workItem from="1509693008249" duration="5655000" />
-      <workItem from="1510016536785" duration="4687000" />
+      <workItem from="1510016536785" duration="8327000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="18181000" />
+    <option name="totallyTimeSpent" value="21821000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1280" height="733" extended-state="6" />
@@ -342,8 +339,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/dialog.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="302">
-          <caret line="107" column="5" selection-start-line="107" selection-start-column="5" selection-end-line="107" selection-end-column="5" />
+        <state relative-caret-position="238">
+          <caret line="149" column="36" selection-start-line="149" selection-start-column="36" selection-end-line="149" selection-end-column="36" />
           <folding />
         </state>
       </provider>

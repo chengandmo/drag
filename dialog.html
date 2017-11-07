@@ -16,6 +16,7 @@
             top:0;
             border:1px solid #ddd;
             background-color: #f2f2f2;
+            z-index: 2;
         }
         .login h1{
             width:100%;
@@ -33,14 +34,22 @@
             cursor: pointer;
             font-size:18px;
         }
+        #mark{
+            position: absolute;
+            width:100%;
+            height:100%;
+            z-index: 1;
+            background: #000;
+            opacity:0.2;
+        }
     </style>
 </head>
 <body>
+
 <input type="button" value="1">
 <input type="button" value="2">
 <input type="button" value="3">
-
-
+<!--<div id="mark"></div>-->
 <!--<div class="login">
     <h1>标题 <span class="close">X</span></h1>
     <div class="content">
@@ -51,18 +60,29 @@
     window.onload = function(){
         var aInput = document.getElementsByTagName('input');
         aInput[0].onclick = function(){
-            var d0 = new Dialog();
-            d0.init({//配置参数
+            var d1 = new Dialog();
+            d1.init({//配置参数
+                iNow : 0 //标识，避免重复创建
             });
         }
 
         aInput[1].onclick = function(){
             var d1 = new Dialog();
             d1.init({//配置参数
+                iNow : 1,
                 w : 100,
                 h : 400,
                 title:'登录',
                 dir : 'right'
+            });
+        }
+
+        aInput[2].onclick = function(){
+            var d1 = new Dialog();
+            d1.init({//配置参数
+                iNow : 2 ,
+                title : '带遮罩',
+                mark : true
             });
         }
 
@@ -74,15 +94,31 @@
         this.settings = {//默认参数
             w : 300,
             h : 300,
-            title: '标题',
-            dir: 'center'
+            title : '标题',
+            dir : 'center',//位置
+            mark : false
         }
     }
+
+    Dialog.prototype.json = {};
 
     //初始化
     Dialog.prototype.init = function(opt){
         extent(this.settings,opt);
-        this.create();
+
+        if(this.json[opt.iNow] == undefined){
+            this.json[opt.iNow] = true;
+        }
+
+        if(this.json[opt.iNow]){
+            this.create();
+            this.fnClose();
+            if(this.settings.mark){
+                this.createMark();
+            }
+            this.json[opt.iNow] = false;
+        }
+
     }
 
     //创建
@@ -105,6 +141,27 @@
             this.oLogin.style.left = (viewWidth() - this.oLogin.offsetWidth) + 'px';
             this.oLogin.style.bottom = '0px';
         }
+    }
+
+    //关闭
+    Dialog.prototype.fnClose = function(){
+        var oClose = this.oLogin.getElementsByTagName('span')[0];
+        var This = this;
+        oClose.onclick = function(){
+            document.body.removeChild(This.oLogin);
+            if(This.settings.mark){
+                document.body.removeChild(This.oMark);
+            }
+            This.json[This.settings.iNow] = true;
+        }
+    }
+
+    //遮罩
+    Dialog.prototype.createMark = function(){
+        var oMark = document.createElement('div');
+        oMark.id = 'mark';
+        document.body.appendChild(oMark);
+        this.oMark = oMark;
     }
 
     //封装可视区宽高
