@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>基于jQuery的选项卡组件</title>
+    <style>
+        #div1 div,#div2 div,#div3 div,#div4 div{
+            width:200px;height:50px;border:1px solid #ddd;display:none;padding:10px;
+        }
+        .active{
+            background: red;
+        }
+    </style>
+    <script src="js/jquery-1.10.1.min.js"></script>
+    <script>
+        /*
+        * 基于jq的选项卡组件
+        *
+        * 配置 Options : event(触发事件)  delay(延时)
+        *
+        * 方法 Methods : nowSel()默认选中  getContent()获取当前内容
+        *
+        * 自定义事件 Events : beforeClick  afterClick
+        *
+        * */
+        $(function(){
+
+            var t1 = new Tab();
+            t1.init('div1',{});
+
+            var t2 = new Tab();
+            t2.init('div2',{
+                event : 'mouseover'
+            });
+
+            var t3 = new Tab();
+            t3.init('div3',{
+                event : 'mouseover',
+                delay : 200
+            });
+
+            var t4 = new Tab();
+            t4.init('div4',{});
+            t4.nowSel(2);
+            $('#input1').click(function(){
+                alert(t4.getContent());
+            })
+
+            $(t4).on('beforeClick',function(){
+                alert(t4.getContent());
+            })
+
+            $(t4).on('afterClick',function(){
+                alert(t4.getContent());
+            })
+
+        })
+
+        //定义tab对象
+        function Tab(){
+
+            this.oParent = null;
+            this.aInput = null;
+            this.aDiv = null;
+            this.iNow = 0;
+
+            this.settings = {
+                event : 'click',
+                delay : 0
+            }
+
+        }
+
+        //初始化
+        Tab.prototype.init = function(oParent , opt){
+
+            $.extend(this.settings , opt);
+            this.oParent = $('#'+oParent);
+            this.aInput = this.oParent.find('input');
+            this.aDiv = this.oParent.find('div');
+
+            //调用切换
+            this.change();
+
+        }
+
+        //切换方法
+        Tab.prototype.change = function(){
+
+            var This = this;
+            var timer = null;
+
+            this.aInput.on(this.settings.event , function(){
+
+                var _this = this;
+                if(This.settings.event == 'mouseover' && This.settings.delay){
+
+                    timer = setTimeout(function(){
+                        show(_this);
+                    },This.settings.delay)
+
+                }else{
+                    show(this);
+                }
+
+
+
+            }).on('mouseout',function(){
+
+                clearTimeout(timer);
+
+            })
+
+            function show(obj){
+
+                //触发自定义事件
+                $(This).trigger('beforeClick');
+
+                This.aInput.removeClass('active');
+                This.aDiv.hide();
+
+                $(obj).addClass('active');
+                This.aDiv.eq($(obj).index()).show();
+
+                This.iNow = $(obj).index(); //存储当前选中项
+
+                //触发自定义事件
+                $(This).trigger('afterClick');
+            }
+
+        }
+
+        //默认选中方法
+        Tab.prototype.nowSel = function(index){
+
+            this.aInput.removeClass('active');
+            this.aDiv.hide();
+
+            this.aInput.eq(index).addClass('active');
+            this.aDiv.eq(index).show();
+
+            this.iNow = index;
+        }
+
+        //获取选项卡当前显示的内容
+        Tab.prototype.getContent = function(){
+
+            return this.aDiv.eq(this.iNow).html();
+
+        }
+
+    </script>
+</head>
+<body>
+    <div id="div1">
+        <input type="button" class="active" value="1">
+        <input type="button"  value="2">
+        <input type="button"  value="3">
+
+        <div style="display: block;">111111</div>
+        <div>222222</div>
+        <div>333333</div>
+    </div>
+
+    <div id="div2">
+        <input type="button" class="active" value="1">
+        <input type="button"  value="2">
+        <input type="button"  value="3">
+
+        <div style="display: block;">111111</div>
+        <div>222222</div>
+        <div>333333</div>
+    </div>
+
+    <div id="div3">
+        <input type="button" class="active" value="1">
+        <input type="button"  value="2">
+        <input type="button"  value="3">
+
+        <div style="display: block;">111111</div>
+        <div>222222</div>
+        <div>333333</div>
+    </div>
+
+    <div id="div4">
+        <input type="button" class="active" value="1">
+        <input type="button"  value="2">
+        <input type="button"  value="3">
+
+        <div style="display: block;">111111</div>
+        <div>222222</div>
+        <div>333333</div>
+    </div>
+
+    <input type="button" value="点击获取当前选项卡内容" id="input1">
+</body>
+</html>
