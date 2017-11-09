@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>照片墙</title>
+    <style>
+        *{margin:0;padding:0}
+        #ul1{width:660px;position:relative;margin:5px auto}
+        li{width:200px;height:150px;margin:5px;float:left;list-style:none}
+    </style>
+    <script src="js/move.js"></script>
+    <script>
+        window.onload = function(){
+
+            var izIndex = 1;
+            var aLi = document.getElementsByTagName('li');
+
+            var arr = [];
+
+            //点击按钮随机分配位置
+            var oInput = document.getElementById('input1');
+
+            oInput.onclick = function(){
+
+                var randomArr = [0,1,2,3,4,5,6,7,8];
+                randomArr.sort(function(n1,n2){
+                    return Math.random() - 0.5;
+                })
+
+                for(var i=0;i<aLi.length;i++){
+                    startMove(aLi[i] , {left:arr[randomArr[i]][0],top:arr[randomArr[i]][1]});
+
+                    //修正索引
+                    aLi[i].index = randomArr[i];
+                }
+
+            }
+
+            //存储浮动布局的li相对ul的偏移量
+            for(var i=0;i<aLi.length;i++){
+                arr.push([aLi[i].offsetLeft , aLi[i].offsetTop]);
+            }
+
+            //将浮动布局批量改成定位布局
+            for(var i=0;i<aLi.length;i++){
+                aLi[i].style.position = 'absolute';
+                aLi[i].style.left = arr[i][0] + 'px';
+                aLi[i].style.top = arr[i][1] + 'px';
+                //清楚margin的影响
+                aLi[i].style.margin = 0;
+            }
+
+            //图片拖拽
+            for(var i=0;i<aLi.length;i++){
+                aLi[i].index = i;
+                drag(aLi[i]);
+            }
+
+            //封装拖拽
+            function drag(obj){
+                var disX = 0;
+                var disY = 0;
+                obj.onmousedown = function(ev){
+
+                    obj.style.zIndex = izIndex++;
+                    var ev = ev || window.event;
+                    disX = ev.clientX - obj.offsetLeft;
+                    disY = ev.clientY - obj.offsetTop;
+
+                    document.onmousemove = function(ev){
+                        var ev = ev || window.event;
+                        obj.style.left = ev.clientX - disX + 'px';
+                        obj.style.top = ev.clientY - disY + 'px';
+
+
+                        //拖动中找到碰撞的图片中最近的，加上红色边框
+                        for(var i =0;i<aLi.length;i++){
+                            aLi[i].style.border = '';
+                        }
+                        var nL = nearLi(obj);
+                        if(nL){
+                            nL.style.border = '1px solid red';
+                        }
+
+                        //给碰到的图加一个红色边框
+                        /*for(var i =0;i<aLi.length;i++){
+                         if(pz(obj,aLi[i]) && obj != aLi[i]){
+                         aLi[i].style.border = '1px solid red';
+
+                         }else{
+                         aLi[i].style.border = 'none';
+                         }
+                         }*/
+
+                    }
+
+                    document.onmouseup = function(){
+                        document.onmousemove = null;
+                        document.onmouseup = null;
+
+                        var nL = nearLi(obj);
+                        var tmp = 0;
+
+                        if(nL){
+                            startMove(nL , {left : arr[obj.index][0] , top: arr[obj.index][1]});
+                            startMove(obj , {left : arr[nL.index][0] , top: arr[nL.index][1]});
+                            nL.style.border = '';
+                            tmp = obj.index;
+                            obj.index = nL.index;
+                            nL.index = tmp;
+                        }else{
+                            startMove(obj , {left : arr[obj.index][0] , top: arr[obj.index][1]});
+                        }
+
+
+
+                    }
+
+                    return false;
+                }
+
+            }
+
+            //找最近的li
+            function nearLi(obj){
+                var value = 9999;
+                var index = -1;
+                for(var i=0;i<aLi.length;i++){
+                    if(pz(obj,aLi[i]) && obj != aLi[i]){
+                        //获取所有参与碰撞的元素距离
+                        var c = jl(obj,aLi[i]);
+
+                        //找到碰撞元素中距离最小的
+                        if(c<value){
+                            value = c;
+                            index = i;
+                        }
+                    }
+                }
+
+                if(index != -1){
+                    return aLi[index];
+                }else{
+                    return false;
+                }
+
+            }
+
+            //求两个元素间距离
+            function jl(obj1,obj2){
+                var a = obj1.offsetLeft - obj2.offsetLeft;
+                var b = obj1.offsetTop - obj2.offsetTop;
+                return Math.sqrt(a*a + b*b);
+            }
+
+            //封装碰撞检测
+            function pz(obj1,obj2){
+                var L1 = obj1.offsetLeft;
+                var R1 = obj1.offsetLeft + obj1.offsetWidth;
+                var T1 = obj1.offsetTop;
+                var B1 = obj1.offsetTop + obj1.offsetHeight;
+
+                var L2 = obj2.offsetLeft;
+                var R2 = obj2.offsetLeft + obj2.offsetWidth;
+                var T2 = obj2.offsetTop;
+                var B2 = obj2.offsetTop + obj2.offsetHeight;
+
+                if(R1<L2 || L1>R2 || B1<T2 || T1>B2){//四种碰不到情况
+                    return false;
+                }else{
+                    return true;
+                }
+            }
+
+        }
+
+    </script>
+</head>
+<body>
+<input type="button" value="随机" id="input1">
+<ul id="ul1">
+    <li><img src="img/1.jpg" alt=""></li>
+    <li><img src="img/2.jpg" alt=""></li>
+    <li><img src="img/3.jpg" alt=""></li>
+    <li><img src="img/4.jpg" alt=""></li>
+    <li><img src="img/5.jpg" alt=""></li>
+    <li><img src="img/1.jpg" alt=""></li>
+    <li><img src="img/2.jpg" alt=""></li>
+    <li><img src="img/3.jpg" alt=""></li>
+    <li><img src="img/4.jpg" alt=""></li>
+</ul>
+</body>
+</html>
