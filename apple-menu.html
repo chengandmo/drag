@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>苹果菜单</title>
+    <style>
+        *{margin:0;padding:0;}
+        #div1{width:100%;height:auto;position:absolute;bottom:0;text-align:center;}
+        #div1 img{width:64px;}
+    </style>
+    <script>
+        window.onload = function(){
+            var aInput = document.getElementsByTagName('input');
+            var oDiv = document.getElementById('div1');
+            var aImg = oDiv.getElementsByTagName('img');
+
+            document.onmousemove = function(ev){
+                var ev = ev || window.event;
+
+                for(var i=0;i<aImg.length;i++){
+
+                    //找每张图的中心点
+                    var x = aImg[i].offsetLeft + aImg[i].offsetWidth/2;
+                    var y = aImg[i].offsetTop + aImg[i].offsetHeight/2 + oDiv.offsetTop;
+
+                    //计算鼠标坐标与图片中心点的垂直距离（直角三角形的两个直角）
+                    var a = ev.clientX - x;
+                    var b = ev.clientY - y;
+
+                    //根据勾股定理求鼠标到图片中心点的斜边距离
+                    var c = Math.sqrt(Math.pow(a,2) + Math.pow(b,2));
+
+                    //缩放比例
+                    var scale = 1 - c/300;
+                    if(scale < 0.5){
+                        scale = 0.5;
+                    }
+
+                    aInput[i].value = scale;
+
+                    aImg[i].style.width = scale * 128 + 'px';
+                    aImg[i].style.height = scale * 128 + 'px';
+
+                }
+            }
+
+
+        }
+    </script>
+</head>
+<body>
+<input type="text">
+<input type="text">
+<input type="text">
+<input type="text">
+<input type="text">
+
+<div id="div1">
+    <img src="img/1.png" alt="">
+    <img src="img/2.png" alt="">
+    <img src="img/3.png" alt="">
+    <img src="img/4.png" alt="">
+    <img src="img/5.png" alt="">
+</div>
+</body>
+</html>
